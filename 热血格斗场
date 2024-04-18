@@ -1,0 +1,27 @@
+#include<iostream>
+#include<vector>
+#include<map>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+class Search {
+public:
+	int power;
+	Search(int n):power(n){}
+	bool operator()(pair<int,int> a, pair<int, int> b) { //发生true时更改，朝反方向趋势
+		if (abs(a.second - power) == abs(b.second - power)) return a.second < b.second;
+		return abs(a.second - power) < abs(b.second - power);
+	}
+};
+int main() {
+	map<int, int> fighter;	//map是元素为pair的动态数组，关联容器
+	fighter.insert(make_pair(1, 1000000000));
+	int n;  cin >> n;
+	int id, power;
+	for (int i = 0; i < n; i++) {
+		cin >> id >> power;
+		map<int, int>::iterator target = min_element(fighter.begin(), fighter.end(), Search(power)); //min_element
+		cout << id << " " << target->first << endl;
+		fighter.insert(make_pair(id, power));
+	}
+}
