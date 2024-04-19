@@ -25,3 +25,44 @@ int main() {
 		fighter.insert(make_pair(id, power));
 	}
 }
+/***************************************************************************上法wa******************************************************/
+/*  利用map自己的排序*/
+#include<iostream>
+#include<vector>
+#include<map>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+int main() {
+	map<int, int> fighter;	//map是元素为pair的动态数组，关联容器
+	fighter.insert(make_pair( 1000000000,1));
+	int n;  cin >> n;
+	int id, power;
+	for (int i = 0; i < n; i++) {
+		cin >> id >> power;
+		fighter[power] = id;
+		map<int,int>::iterator it=fighter.find(power);
+		map<int, int>::iterator after, before;
+		if(it==fighter.begin())
+		{
+			after = ++it;
+			it--;
+			if (it == fighter.begin())  cout << id << " " << after->second << endl;
+		}
+		else if (it == fighter.end()) {
+			before = --it; it++;
+			cout << id << " " << before->second << endl;
+		}
+		else {
+			
+			 before = --it; it++;
+			 after = ++it; it--;
+			if (after->first-power==power-before->first) {
+				cout << id << " " << before->second << endl;
+			}
+			else if(after->first - power > power - before->first) cout<< id << " " << before->second << endl;
+			else if(after->first - power < power - before->first) cout << id << " " << after->second << endl;
+		}
+		fighter.insert(make_pair(power,id));
+	}
+}
