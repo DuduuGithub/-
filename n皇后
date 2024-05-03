@@ -1,0 +1,44 @@
+#include<iostream>
+#include<vector>
+#include<map>
+#include<cmath>
+using namespace std;
+vector<map<int, int>> result;
+bool bingo(map<int, int>& board, int row, int i) {
+	for (map<int, int>::iterator it = board.begin(); it != board.end(); it++) {
+		if (i == it->second || abs(row - it->first) == abs(i - it->second)) return false;
+	}
+	return true;
+}
+void backtracking(int n, map<int, int>& board, int row) {
+	if (row == n) {
+		result.push_back(board);
+	}
+	else {
+		for (int i = 0; i < n; i++) {
+			if (bingo(board, row, i)) {
+				board.insert(make_pair(row, i));
+				backtracking(n, board, row + 1);
+				board.erase(row);
+			}
+		}
+	}
+	return;
+}
+int main() {
+	int n;
+	cin >> n;
+	map<int, int> board;
+	backtracking(n, board, 0);
+	cout << result.size() << endl;
+	for (auto it = result.begin(); it < result.end(); it++) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (j == (*it)[i]) cout << "1 ";
+				else cout << "0 ";
+			}
+			cout << endl;
+		}
+		cout << endl;
+	}
+}
