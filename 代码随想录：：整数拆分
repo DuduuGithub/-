@@ -1,0 +1,22 @@
+//这里认为一个数可以不分割，2的dp为2
+#include<iostream>
+using namespace std;
+int main() {
+	int target;
+	cin >> target;
+	int dp[100];
+	for (int i = 1; i <= target; i++) {
+		if (i==1) {
+			dp[i] = 1;
+		}
+		else {
+			int max=i;
+			for (int j = 1; j <= i/2; j++) {
+				int temp = j * dp[i - j];
+				max = max > temp ? max : temp;
+			}
+			dp[i] = max;
+		}
+	}
+	for (int i = 1; i <= target; i++) cout << dp[i] << " ";
+}
