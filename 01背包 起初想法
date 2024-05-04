@@ -1,0 +1,35 @@
+//从后往前，省去了不必计算的dP，但没法用滚动数组的方式减少空间，应该可以用map动态管理尽可能减少空间，但没尝试
+//而且似乎还有点问题，初始化？
+#include<iostream>
+using namespace std;
+int value[20], weight[20];
+int dp[20][100] = { 0 };
+int DP(int num,int capacity) {
+	if (dp[num][capacity] == -1) {
+		if (num >= 1 || capacity >= 1) {
+			if (capacity - weight[num] < 0) dp[num][capacity]=DP(num - 1, capacity);
+			else dp[num][capacity] = max(DP(num - 1, capacity), DP(num - 1, capacity - weight[num] ) + value[num]);
+		}
+		if (capacity == 0) dp[num][0] = 0;
+		if (num == 0) {
+			if (capacity >= weight[0]) dp[0][capacity] = value[0];
+			else dp[0][capacity] = 0;
+		}
+	}
+	return dp[num][capacity];
+}
+int main() {
+	
+	int sum,capacity;
+	cin >> sum>>capacity;
+	memset(dp, -1, sizeof(dp));
+	for (int i = 0; i < sum; i++) cin >> weight[i];
+	for (int i = 0; i < sum; i++) cin >> value[i];
+	
+	DP(sum - 1, capacity);
+	for (int i = 0; i < 20; i++) {
+		for (int j = 0; j < 100; j++) cout << dp[i][j]<<" ";
+		cout << endl;
+	}
+	cout << dp[sum - 1][capacity];
+}
