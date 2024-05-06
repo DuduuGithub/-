@@ -1,0 +1,32 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+void get_prefix(char* a,vector<int>&prefix) {
+	for (int i = 1; i <strlen(a); i++) {
+		if (a[i] == a[prefix[i - 1]]) prefix[i] = prefix[i - 1] + 1;
+		else prefix[i] = 0;
+	}
+}
+int main() {
+
+	int size; int size_key; cin >> size >> size_key;
+	char* house = new char[size + 1];
+	char* key = new char[size_key + 1];
+	vector<int> prefix(size_key, 0);
+	cin >>house>> key;
+	get_prefix(key, prefix);
+	int result = -1;
+	int j = 0;
+	for (int i = 0; i < size; i++) {
+		while (j > 0 && house[i] != key[j]) {
+			j = prefix[j - 1];
+		}
+		if (house[i] == key[j]) j++;
+		if (j == size_key) {
+			result = i - size_key+1;
+			break;
+		}
+	}
+	cout << result;
+}
