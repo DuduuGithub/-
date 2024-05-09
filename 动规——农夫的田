@@ -1,0 +1,44 @@
+农夫有一块田地用于种植作物。他每年都要选择一种作物来种植，并记录下每年的收益。现在他想知道如果他每年选择种植某种作物，到第n年他可以获得的最大收益是多少。
+
+假设已知两种作物在第i年的收益分别为p1[i]和p2[i]，农夫可以在第i年选择种植这两种作物中的一种，或者不种植任何作物。不种植作物的收益为0。
+
+农夫不能连续两年种植同种作物，因为这会降低土地的肥力。
+
+请你用C++实现一个递归函数来计算出农夫在第n年可以获得的最大收益是多少。
+
+输入
+第一行输入一个整数n表示年数。
+
+接下来一行有n个整数，其中第i个整数表示第i年种植第一种作物的收益p1[i]。
+
+接下来一行有n个整数，其中第i个整数表示第i年种植第二种作物的收益p2[i]。
+输出
+输出一个整数表示农夫在第n年可以获得的最大收益。
+样例输入
+4
+1 2 3 4
+2 3 4 5
+样例输出
+12
+
+#include<iostream>
+#include<vector>
+using namespace std;
+int max3(int a, int b, int c) {
+	a = max(a, b);
+	return max(a, c);
+}
+int main() {
+	int n; cin >> n;
+	vector<int>p1(n+1, 0);
+	vector<int>p2(n+1, 0);
+	vector<vector<int>>dp(n + 1, vector<int>(3, 0));
+	for (int i = 1; i <= n; i++) cin >> p1[i];
+	for (int i = 1; i <= n; i++) cin >> p2[i];
+	for (int j = 1; j <= n; j++) {
+		dp[j][0] = max3(dp[j - 1][0], dp[j - 1][1], dp[j - 1][2]);
+		dp[j][1] = max(dp[j - 1][0] + p1[j], dp[j - 1][2] + p1[j]);
+		dp[j][2] = max(dp[j - 1][0] + p2[j], dp[j - 1][1] + p2[j]);
+	}
+	cout << max3(dp[n][0], dp[n][1], dp[n][2]);
+}
