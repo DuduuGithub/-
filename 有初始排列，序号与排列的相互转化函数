@@ -1,0 +1,65 @@
+#include<iostream>
+using namespace std;
+unsigned int conmul[21] = { 1,1 };
+void init_conmul() {
+	for (int i = 1; i <=20 ; i++) {
+		conmul[i] = i * conmul[i - 1];
+	}
+	return;
+}
+//返回编号，起始的对应编号为0
+int string_to_int(int* first,int* s,int len) {
+	int sum = 0;
+	bool used[21];
+	memset(used, 0, sizeof(bool) * 21);
+	int the_start = 10000;
+	for (int i = 0; i < len; i++) the_start = min(the_start, first[i]);
+	//对0~len-1每个位置考虑
+	for (int i = 0; i <= len-1; i++) {
+		
+		int n = 0;
+		for(int j=the_start;j<=s[i]-1;j++)
+			if (!used[j]) {
+				n++;
+			}
+
+		sum += n * conmul[len-1 - i];
+		used[s[i]] = 1;
+	}
+	return sum;
+}
+
+//得到序号为num的排列 从0开始
+//由于从零开始，所以差异值就是num-0=num
+void int_to_string(int* first,int*&result, int len, int num) {
+	bool used[21];
+	memset(used, 0, sizeof(bool) * 21);
+	//得到序列的最低值
+	int the_start = 10000;
+	for (int i = 0; i < len; i++) the_start = min(the_start, first[i]);
+
+	for (int i = 0; i <= len - 1; i++) {
+		//第i位能取到什么值
+		int j;
+		for (j = the_start; j <= the_start + len - 1; j++) {
+			//used的跳过对序号数值无影响
+			if (!used[j]) {
+				if (num >= conmul[len - 1 - i] ) {
+					num -= conmul[len - 1 - i];
+				}
+				else break;
+			}
+		}
+		result[i] = j;
+		used[j] = true;
+	}
+}
+int main() {
+	init_conmul();
+	int a[] = {1,2,3,4};
+	int b[] = { 3,2,4,1 };
+	cout << string_to_int(a,b,4)<<endl;
+	int* c = new int[4];
+	int_to_string(a, c,4, 15);
+	for (int i = 0; i < 4; i++) cout << c[i];
+}
